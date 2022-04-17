@@ -42,7 +42,7 @@ Example encryption algorithm such as `RSA`, `ECC`, `Diffie-Hellman`, `DSS`, and 
 
 For most likely cases, We can summarize steps for creating communication between client and server. Before any communication, They must initial rules and keys for security. You can follow these steps to understand how they work to create secure communication.
 
-// place for image  
+![SSL/TLS handshake](images/ssl-handshake.png)
 
 1. Client --> send hello package to target server. In message has client's information such as support cipher suits(algorithms), SSL/TLS versions, and other.
 2. Server --> Check client's information that match a policies you configure. If not match they will reject request. For match policies, They send certificate with public key to client.
@@ -55,7 +55,7 @@ For most likely cases, We can summarize steps for creating communication between
 
 In the previous topic, We can see some weaknesses in the initial process. If your contact server endpoint is not your target server, they will fake the server or something like that. Can you trust it?  
 
-// place for image
+![SSL with CA](images/ssl-with-ca.png)
 
 For solved, You can use CA to help you verify certificates that you can trust. In step 3, you can get the issuer from the server's certificate and ask them to guarantee this certificate.  
 
