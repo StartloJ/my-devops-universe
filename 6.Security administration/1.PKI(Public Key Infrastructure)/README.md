@@ -10,5 +10,6 @@ This workshop, you can learn about `What is PKI` and `How can we use it`. You ca
 
 ## Let's go
 
-1. [Explanation](Explanation.md)
-2. [Workshop](Workshop.md)
+1. [Explanation](./Explanation.md)
+2. [Workshop 1: Self-sign cert](./Workshop-selfsign.md)
+3. [Workshop 2: Trust with CA](./Workshop-ca.md)
