@@ -4,7 +4,7 @@ This workshop, you can learn about `What is PKI` and `How can we use it`. You ca
 
 `What is PKI?` Before answering this question, you should know to What is **Symmetric** and **Asymmetric** encryption.  
 
-You can understand a key difference between **Symmetric** and **Asymmetric** encryption. In a simple scenario, Asymmetric encryption will be stronger and more secure than Symmetric encryption.  
+You can understand a key difference between **Symmetric** and **Asymmetric** encryption. In a simple scenario, Asymmetric encryption will be stronger and more secure than Symmetric encryption because we do not use same secret key for encrypt/decrypt messages.  
 
 Information security has grown to be a hugely important factor in any communication, transaction, and ETC. A little vulnerability or weakness in communication that can be leveraged to devastating effects. This session will show you two encryption techniques that can be used to tighten communication security.  
 
@@ -48,8 +48,8 @@ For most likely cases, We can summarize steps for creating communication between
 2. Server --> Check client's information that match a policies you configure. If not match they will reject request. For match policies, They send certificate with public key to client.
 3. Client --> Verify server's certificate that trusted or not. The certificate information should match in your request like common name, expired date, and ETC.
 4. Client --> Create session key(also symmetric secret key) for secure communication tunnel. Then encrypt payload with public key in certificate before send them to server.
-5. Server --> Recieve message with session key, so decrypt with private key. They send ackownledge message to client for accept this key in secure tunnel.
-6. Both --> Send/recieve messages with session key. If session key expire, they will repeat above step to establish communication.
+5. Server --> Receive message with session key, so decrypt with private key. They send acknowledge message to client for accept this key in secure tunnel.
+6. Both --> Send/receive messages with session key. If session key expire, they will repeat above step to establish communication.
 
 ## More secure with CA(Certificate Authority)
 
