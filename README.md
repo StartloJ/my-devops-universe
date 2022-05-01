@@ -40,4 +40,8 @@ Your computer(some machine):
 
 ## How can we contribute?
 
-See me in next commit.
+You can read in [Contributed docs](./Contribute.md)
+
+## Request topics and any issues
+
+If you any question about this repo or issues in workshop, you should open issues and tag `watcharin`.
