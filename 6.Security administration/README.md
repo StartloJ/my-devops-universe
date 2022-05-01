@@ -2,7 +2,10 @@
 
 These sessions can help you to know about basic security and other related topics.
 
-## List of sessions
+## Basic knowledge to must have
 
-- [PKI(Public Key Infrastructure)](1.PKI(Public%20Key%20Infrastructure)/README.md)
-- [Hashing](2.Hashing/README.md)
+Next in future commit.
+
+## Advanced knowledge to best-effort you learn
+
+Next in future commit.
