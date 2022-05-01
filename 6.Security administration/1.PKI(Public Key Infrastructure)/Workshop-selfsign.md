@@ -1,5 +1,7 @@
 # PKI workshop
 
+From previous Doc, I said `What is PKI`. Then this Doc, I will explain `How to use them in some case` and next post I will give an advanced technique for PKI.
+
 This workshop will simulate the scenario in how we can use PKI to make secure communication. All this session we work on terminal, you can following in step-by-step.
 
 ## Prerequisite
@@ -11,14 +13,14 @@ This workshop will simulate the scenario in how we can use PKI to make secure co
 
 ## Use self-sign to secure communication
 
-Scenario: We will provide simple web server and map SSL certificate on it. We create connection with cURL and debug it to see what's happen in handshake state. Then, we compare between insecure and secure.  
+**Scenario:** We will provide simple web server and map SSL certificate on it. We create connection with cURL and debug it to see what's happen in handshake state. Then, we compare between insecure and secure.  
 
 1. Generate SSL with CN is `ssl-lab.example.local`.
 
    ```bash
     $ openssl req -newkey rsa:4096 -nodes -keyout ssl/ssl-lab.example.local.key \
         -x509 -sha256 -days 3 \
-        -subj "/C=TH/ST=BKK/O=Opsta/OU=DevOps/CN=ssl-lab.example.local" \
+        -subj "/C=TH/ST=BKK/O=OU=DevOps/CN=ssl-lab.example.local" \
         -addext "subjectAltName = DNS:ssl-lab.example.local, DNS:localhost, DNS:127.0.0.1" \
         -out ssl/ssl-lab.example.local.crt
 
@@ -28,6 +30,20 @@ Scenario: We will provide simple web server and map SSL certificate on it. We cr
     writing new private key to 'ssl-lab.example.local.key'
     -----
    ```
+
+   > ***Explain command***.  
+   > For create certificated, we use OpenSSL library to create and manage them.  
+   > You can use following arguments to generate 2 files like private and public key:  
+   > **req** = request new resources  
+   > **-newkey rsa:4096** = create new private key with length 4096 keys.  
+   > **-nodes** = export output key with plaintext.  
+   > **-keyout /path/to/save/file.key** = specific location to save private key.  
+   > **-x509** = output with x509 structure.  
+   > **-sha256** = choose a message digest algorithm.  
+   > **-days 3** = expired date for this certificate in 3 day.  
+   > **-subj "something"** = quick add metadata for certificate. The arg must be formatted as `/type0=value0/type1=value1/type2=...`, characters may be escaped by `\ (backslash)`, no spaces are skipped.  
+   > **-addext "something"** = add some extension metadata. The arg must be formatted as `key=value`  
+   > **-out** = specific location to save public key and digital certificate.  
 
    Check file should created.
 
@@ -40,7 +56,7 @@ Scenario: We will provide simple web server and map SSL certificate on it. We cr
     0 directories, 2 files
    ```
 
-2. Verify certificate with openssl
+2. Verify certificate is matched with openssl cli.
 
     ```bash
     $ openssl x509 -noout -modulus -in ssl/ssl-lab.example.local.crt | openssl md5
@@ -51,9 +67,44 @@ Scenario: We will provide simple web server and map SSL certificate on it. We cr
     (stdin)= ac9173e222ab6b766e49da3069268dd0
     ```
 
-    If your see same result in 2 command, you're right.
+    > If your see same `stdin` in 2 output, you're right.
 
 3. Now, you already to create web server in docker for learn how SSL work. First, you will check your docker daemon working and run a sample Nginx web server.
+
+    Create a Nginx site config in following.
+
+    ```nginx
+    <!-- file location in ./config/default.conf -->
+    server {
+        listen       80;
+        server_name  localhost ssl-lab.example.local;
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+    server {
+        listen              443 ssl;
+        server_name         localhost ssl-lab.example.local;
+        keepalive_timeout   70;
+        ssl_certificate     /etc/nginx/ssl/ssl-lab.example.local.crt;
+        ssl_certificate_key /etc/nginx/ssl/ssl-lab.example.local.key;
+        ssl_protocols       TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers off;
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+    ```
 
     Create a Dockerfile in following.
 
@@ -68,50 +119,10 @@ Scenario: We will provide simple web server and map SSL certificate on it. We cr
         && chown -R 0:0 /etc/nginx/conf.d/default.conf
     ```
 
-    Create Nginx configure in `config/`
-
-    ```ini
-    server {
-        listen       80;
-        server_name  localhost ssl-lab.example.local;
- 
-        location / {
-            root   /usr/share/nginx/html;
-            index  index.html index.htm;
-        }
- 
-        error_page   500 502 503 504  /50x.html;
-        location = /50x.html {
-            root   /usr/share/nginx/html;
-        }
-    }
- 
-    server {
-        listen              443 ssl;
-        server_name         localhost ssl-lab.example.local;
-        keepalive_timeout   70;
- 
-        ssl_certificate     /etc/nginx/ssl/ssl-lab.example.local.crt;
-        ssl_certificate_key /etc/nginx/ssl/ssl-lab.example.local.key;
-        ssl_protocols       TLSv1.1 TLSv1.2;
-        ssl_prefer_server_ciphers off;
- 
-        location / {
-            root   /usr/share/nginx/html;
-            index  index.html index.htm;
-        }
- 
-        error_page   500 502 503 504  /50x.html;
-        location = /50x.html {
-            root   /usr/share/nginx/html;
-        }
-    }
-    ```
-
     Then, build customize http server in docker.
 
     ```bash
-    $ docker build -t opsta/http:lab .
+    $ docker build -t http:lab .
 
     Sending build context to Docker daemon  233.5kB
     Step 1/4 : FROM nginx:1.20-alpine
@@ -126,13 +137,13 @@ Scenario: We will provide simple web server and map SSL certificate on it. We cr
     Removing intermediate container f8bfa038944f
      ---> 725ee42e058b
     Successfully built 725ee42e058b
-    Successfully tagged opsta/http:lab
+    Successfully tagged http:lab
     ```
 
-4. You can run http server in terminal.
+4. You can run http(s) server in terminal.
 
     ```bash
-    docker run -it --rm -p 8080:80 -p 8443:443 opsta/http:lab
+    docker run -it --rm -p 8080:80 -p 8443:443 http:lab
     ```
 
 5. Verify http server has running with `docker ps` or `curl http://localhost:8080`. It just return result on STDOUT.
@@ -141,7 +152,7 @@ Scenario: We will provide simple web server and map SSL certificate on it. We cr
     $ docker ps
 
     CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS                                                                            NAMES
-    1235d24fe059   opsta/http:lab   "/docker-entrypoint.…"   7 minutes ago   Up 7 minutes   0.0.0.0:8080->80/tcp, :::8080->80/tcp, 0.0.0.0:8443->443/tcp, :::8443->443/tcp   relaxed_montalcini
+    1235d24fe059   http:lab   "/docker-entrypoint.…"   7 minutes ago   Up 7 minutes   0.0.0.0:8080->80/tcp, :::8080->80/tcp, 0.0.0.0:8443->443/tcp, :::8443->443/tcp   relaxed_montalcini
     ```
 
 6. You can use `cURL` to see what happen.
@@ -197,7 +208,7 @@ Scenario: We will provide simple web server and map SSL certificate on it. We cr
     * Connection #0 to host localhost left intact
     ```
 
-    Use `curl` in default option and see **error**
+    Use `curl` in default option and see **error** in https tunnel.
 
     ```bash
     $ curl -v https://localhost:8443
@@ -226,35 +237,53 @@ Scenario: We will provide simple web server and map SSL certificate on it. We cr
     In the error response, We can translate in a part of message.  
 
     1. They're try to make a connection to endpoint.
-       >\*   Trying 127.0.0.1:8443...  
-       >\* Connected to localhost (127.0.0.1) port 8443 (#0)
+
+       ```bash
+       Trying 127.0.0.1:8443...  
+       Connected to localhost (127.0.0.1) port 8443 (#0)
+       ```
 
     2. They're prepared information for connection.
-       >\* ALPN, offering h2  
-       >\* ALPN, offering http/1.1  
-       >\* successfully set certificate verify locations:  
-       >\*  CAfile: /etc/ssl/certs/ca-certificates.crt  
-       >\*  CApath: /etc/ssl/certs  
+
+       ```bash
+       ALPN, offering h2  
+       ALPN, offering http/1.1  
+       successfully set certificate verify locations:  
+         CAfile: /etc/ssl/certs/ca-certificates.crt  
+         CApath: /etc/ssl/certs 
+       ```
 
     3. They're send first contact message in `hello`.
-       >\* TLSv1.3 (OUT), TLS handshake, Client hello (1):  
-       >\* TLSv1.3 (IN), TLS handshake, Server hello (2):
+
+       ```bash
+       TLSv1.3 (OUT), TLS handshake, Client hello (1):  
+       TLSv1.3 (IN), TLS handshake, Server hello (2):
+       ```
 
     4. Server send digital certificate to client.
-       >\* TLSv1.2 (IN), TLS handshake, Certificate (11):
+
+       ```bash
+        TLSv1.2 (IN), TLS handshake, Certificate (11):
+       ```
 
     5. Client verify certificate integrity and found in self-sign issue.
-       >\* TLSv1.2 (OUT), TLS alert, unknown CA (560):
-       >\* SSL certificate problem: self signed certificate
+
+        ```bash
+        TLSv1.2 (OUT), TLS alert, unknown CA (560):
+        SSL certificate problem: self signed certificate
+        ```
 
     6. Client close connection and report error message.
-       >\* Closing connection 0  
-       > curl: (60) SSL certificate problem: self signed certificate  
-       > More details here: 'https://curl.se/docs/sslcerts.html'  
-       >  
-       > curl failed to verify the legitimacy of the server and therefore could not  
-       > establish a secure connection to it. To learn more about this situation and  
-       > how to fix it, please visit the web page mentioned above.  
+
+        ```bash
+        Closing connection 0  
+        curl: (60) SSL certificate problem: self signed certificate  
+        More details here: 'https://curl.se/docs/sslcerts.html'  
+         
+        curl failed to verify the legitimacy of the server and therefore could not  
+        establish a secure connection to it. To learn more about this situation and  
+        how to fix it, please visit the web page mentioned above.  
+        ```
 
 7. You can use `crt` certificate file in previous step to trust this communication.
 
@@ -304,3 +333,9 @@ Scenario: We will provide simple web server and map SSL certificate on it. We cr
     < ETag: "6193c877-264"
     < Accept-Ranges: bytes
     ```
+
+## Conclusion
+
+You can see how to use PKI concept to make secure communication in this post. Then, you can adapt this step to your application to basic secure communication.
+
+See ya in next posts to use CA for intermediate issuer.
