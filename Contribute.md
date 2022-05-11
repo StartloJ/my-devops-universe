@@ -22,5 +22,6 @@ This docs will explain you how to contributed in knowledge center.
 ## Step to contributed fix existed wrong contents
 
 1. You will clone and update main branch.
-2. Create new branch to write your contents. You should create new branch in formatted >> fix_docs/`your contents`
-3. If you finished your contents, you will create Merge Request to `main` branch and choose reviewer/assignee in one of team lead for review your contents and approve to merge to main.
+2. You can assignee team lead to solve or you can do in step 3.
+3. Create new branch to write your contents. You should create new branch in formatted >> fix_docs/`your contents`
+4. If you finished your contents, you will create Merge Request to `main` branch and choose reviewer/assignee in one of team lead for review your contents and approve to merge to main.
