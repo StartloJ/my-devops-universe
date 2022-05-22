@@ -62,7 +62,7 @@ For solved, You can use CA to help you verify certificates that you can trust. I
 If you have doubt in CA issuer from the server certificate. You can trust the root CA in your host, so you will integrity check with the root CA for a guarantee certificate. We call this process is `Chain of trust`.  
 
 Next, We will show you how it work.  
-[Go to workshop](Workshop.md)
+[Go to workshop](./Workshop-selfsign.md)
 
 ## Reference
 

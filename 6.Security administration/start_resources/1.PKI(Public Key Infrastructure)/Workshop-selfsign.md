@@ -339,3 +339,5 @@ This workshop will simulate the scenario in how we can use PKI to make secure co
 You can see how to use PKI concept to make secure communication in this post. Then, you can adapt this step to your application to basic secure communication.
 
 See ya in next posts to use CA for intermediate issuer.
+Next, We will show you how it work.  
+[Go to workshop](./Workshop-ca.md)
