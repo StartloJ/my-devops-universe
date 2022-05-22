@@ -7,6 +7,7 @@ This workshop, you can learn about `What is PKI` and `How can we use it`. You ca
 - PKI: <https://sectigostore.com/blog/what-is-pki-a-laymans-guide-to-public-key-infrastructure/>
 - CA certificate: <https://www.exoscale.com/syslog/securing-web-properties-through-https/>
 - CA certificate: <https://docs.pexip.com/admin/certificate_management.htm>
+- root CA: <https://www.ibm.com/docs/en/runbook-automation?topic=certificate-generate-root-ca-key>
 
 ## Let's go
 
