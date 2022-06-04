@@ -20,16 +20,17 @@ You can be one of the project contributors and improve this learning to update. 
 10. Migrate source code to Docker
 11. Docker compose infrastructure
 12. Implement platforms
-13. Ansible
-14. Cloud engineer
-15. Terraform provisioner
-16. Kubernetes on-premise
-17. Deploy app to K8s
-18. Helm template
-19. CI/CD
-20. Develop load test
-21. UI testing
-22. Real world application to containerize
+13. Observability and Analytic
+14. Ansible
+15. Cloud engineer
+16. Terraform provisioner
+17. Kubernetes on-premise
+18. Deploy app to K8s
+19. Helm template
+20. CI/CD
+21. Develop load test
+22. UI testing
+23. Real world application to containerize
 
 ## Prerequisites
 
