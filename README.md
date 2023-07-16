@@ -26,11 +26,10 @@ You can be one of the project contributors and improve this learning to update. 
 16. Terraform provisioner
 17. Kubernetes on-premise
 18. Deploy app to K8s
-19. Helm template
-20. CI/CD
-21. Develop load test
-22. UI testing
-23. Real world application to containerize
+19. CI/CD
+20. Develop load test
+21. UI testing
+22. Real world application to containerize
 
 ## Prerequisites
 
